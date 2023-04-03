@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+  db:
+    image: mariadb:10
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mariadb
+      - MYSQL_DATABASE=mariadb
+      - MYSQL_USER=mariadb
+      - MYSQL_PASSWORD=mariadb
+      - MARIADB_ROOT_PASSWORD=mysecretpassword
+    ports:
+      - 9299:3306
+    volumes:
+      - "mysqldata:/var/lib/mysql"
+
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: clinicmanagement
+    restart: always
+    # command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DATABASE_URL=mysql://mariadb:mariadb@db:3306/mariadb
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_PASSWORD=admin123
+      - DJANGO_SUPERUSER_EMAIL=admin@example.com
+    ports:
+      - "9222:8000"
+    depends_on:
+      - db
+    
+
+volumes:
+  mysqldata:
