@@ -1,0 +1,60 @@
+<!DOCTYPE html> {% extends "layout/base.html" %} {% block title %} คลินิก | หน่วยข้อมูล {% endblock %}{% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="col-lg-12">
+    <h2 class="mx-2 px-3">หน่วยข้อมูล</h2>
+    <div class="row mx-2 pb-5 mt-0">
+        <div class="col my-4">
+            <div class="card" style="width: 18rem; padding: 0.5em;">
+                <img src="https://images.unsplash.com/photo-1598046937895-2be846402c0d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NDR8fG1lZGljaW5lfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">หน่วยยา</h5>
+                    <p class="card-text">คลิกที่ปุ่มด้านล่างเพื่อจัดการรายการหน่วยยา</p>
+                    <a href="{% url 'Unit:medicine-unit-list' %}" class="btn btn-primary">จัดการหน่วยยา</a>
+                </div>
+            </div>
+        </div>
+        <div class="col my-4">
+            <div class="card" style="width: 18rem; padding: 0.5em;">
+                <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">ประเภทยา</h5>
+                    <p class="card-text">คลิกที่ปุ่มด้านล่างเพื่อจัดการประเภทยา</p>
+                    <a href="{% url 'Unit:medicine-type-list' %}" class="btn btn-warning">จัดการประเภทยา</a>
+                </div>
+            </div>
+        </div>
+        <div class="col my-4">
+            <div class="card" style="width: 18rem; padding: 0.5em;">
+                <img src="https://images.unsplash.com/photo-1544991936-9464fa9919d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">บัญชียาหลักแห่งชาติ</h5>
+                    <p class="card-text">คลิกที่ปุ่มด้านล่างเพื่อจัดการบัญชียาหลักแห่งชาติ</p>
+                    <a href="{% url 'Unit:essential-medicine-list' %}" class="btn btn-light">จัดการบัญชียาหลักแห่งชาติ</a>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="col my-4">
+            <div class="card" style="width: 18rem; padding: 0.5em;">
+                <img src="https://images.unsplash.com/photo-1501139083538-0139583c060f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">ช่วงเวลา</h5>
+                    <p class="card-text">คลิกที่ปุ่มด้านล่างเพื่อจัดการช่วงเวลาในการเพิ่มคิว</p>
+                    <a href="{% url 'Unit:working-time-list' %}" class="btn btn-dark">จัดการช่วงเวลา</a>
+                </div>
+            </div>
+        </div> -->
+        <div class="col my-4">
+            <div class="card" style="width: 18rem; padding: 0.5em;">
+                <img src="https://images.unsplash.com/photo-1642714857351-bf47d71d7e36?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">คำนำหน้าชื่อ</h5>
+                    <p class="card-text">คลิกที่ปุ่มด้านล่างเพื่อจัดการคำนำหน้าชื่อ</p>
+                    <a href="{% url 'Unit:name-title-list' %}" class="btn btn-secondary">จัดการคำนำหน้าชื่อ</a>
+                </div>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+
+{% endblock %}

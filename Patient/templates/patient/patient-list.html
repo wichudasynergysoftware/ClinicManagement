@@ -1,0 +1,192 @@
+<!DOCTYPE html>{% extends "layout/base.html"%} {% block title %} คลินิก | รายการผู้ป่วยทั้งหมด {% endblock %} {% block content %}
+{% load crispy_forms_tags %} 
+<div class="col-lg-12">
+    <h2>รายการผู้ป่วยทั้งหมด</h2>
+    <div class="row">
+        {% if user.is_nurse == True or user.is_superuser == True or user.is_staff == True %}
+        <div class="col-lg-2">
+            <a href="{% url 'Patient:patient-add' %}" class="btn btn-success">ลงทะเบียนผู้ป่วยใหม่</a>
+        </div>
+        <div class="col-lg-7">
+            <a href="{% url 'Patient:export-csv-patient' %}" class="btn btn-light">
+                <i class="fa-solid fa-print"></i>&nbsp; พิมพ์รายการ
+            </a>
+        </div>
+        <div class="col-lg-3">
+            <form class="d-flex" role="search" action="{% url 'Patient:patient-search' %}">
+                <input class="form-control me-2" type="search" placeholder="ระบุชื่อ" aria-label="Search" name="q" />
+                <button class="btn btn-success" type="submit">ค้นหา</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="col-lg-2"></div>
+        <div class="col-lg-7"></div>
+        <div class="col-lg-3">
+            <form class="d-flex" role="search" action="{% url 'Patient:patient-search' %}">
+                <input class="form-control me-2" type="search" placeholder="ระบุชื่อ" aria-label="Search" name="q" />
+                <button class="btn btn-success" type="submit">ค้นหา</button>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+
+    <table class="table table-hover table-borderless" style="text-align: center">
+        <thead>
+            <tr>
+                <th scope="col ">#</th>
+                <th scope="col ">เลขประจำตัวผู้ป่วย</th>
+                <th scope="col ">ชื่อ-นามสกุล</th>
+                <th scope="col ">อายุ</th>
+                <th scope="col ">เลขบัตรประจำตัวประชาชน</th>
+                <th scope="col ">เพศ</th>
+                <th scope="col ">เบอร์โทรศัพท์มือถือ</th>
+                {% if user.is_nurse == True or user.is_superuser == True or user.is_staff == True %}
+                <th scope="col ">อาการเบื้องต้น</th>
+                <th scope="col ">เพิ่มคิว</th>
+                {% endif %}
+                <th scope="col ">ประวัติการรักษา</th>
+                <th scope="col ">ตัวเลือก</th>
+            </tr>
+        </thead>
+
+        <br> {% for d in page_obj %}
+        <tbody>
+            <tr>
+                <td data-label="#">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td data-label="เลขประจำตัวผู้ป่วย">{{ d.hn }}</td>
+                <td data-label="ชื่อ-นามสกุล">
+                    <a href="{% url 'Patient:patient-detail' d.id d.slug %} " style="text-decoration: none;">{{ d.title }}{{ d.name }}</a>
+                </td>
+                <td data-label="อายุ">{{ d.age }}</td>
+                <td data-label="เลขบัตรประจำตัวประชาชน">{{ d.idCard }}</td>
+                <td data-label="เพศ">{{ d.gender }}</td>
+                <td data-label="เบอร์โทรศัพท์มือถือ">{{ d.phone }}</td>
+                {% if user.is_nurse == True or user.is_superuser == True or user.is_staff == True %}
+                <td data-label="ระบุอาการเบื้องต้น">
+                    <button onclick="document.getElementById('id01{{d.id}}').style.display='block'" style="width:auto;" class="btn btn-outline-success">ระบุอาการ</button>
+                    <div id="id01{{d.id}}" class="modal1">
+                        <form class="modal-content1 animate" action="{% url 'Patient:add-patient-initial-symptom' d.id %}" method="post">
+                            <div class="container">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel4">ระบุอาการเบื้องต้น{{d.id}}</h1>
+                                    <button onclick="document.getElementById('id01{{d.id}}').style.display='none'" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body mb-4 mt-4">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            {% csrf_token %}
+                                            <label for="initialSymptoms">อาการเบื้องต้น*</label>
+                                            <input type="text" name="initialSymptoms" class="form-control" required><br>
+                                            <!-- {{ form.initialSymptoms|as_crispy_field }}<br> -->
+                                            {{ form.temp|as_crispy_field }}<br>
+                                            {{ form.pressure|as_crispy_field }}<br>
+                                            {{ form.pulse|as_crispy_field }}<br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col">
+                                        <div class="col float-end">
+                                            <button type="submit" class="btn btn-success">บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                
+                    <script>
+                        var modal = document.getElementById('id01');
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+                    </script>
+                </td>
+                <td data-label="เพิ่มคิว">
+                    <form action="{% url 'Patient:patient-queue' d.id %}" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-success">คิว</button>
+                    </form>
+                </td>
+                {% endif %}
+                <td data-label="ประวัติการรักษา">
+                    <a href="{% url 'Patient:show-patient-treatment-history' d.id %}" class="btn btn-outline-primary">ดูประวัติ</a>
+                </td>
+                <!-- <td data-label="ส่งออก">
+                    <a href="{% url 'Patient:patient-appointment' d.id %} " target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="ปริ้นต์ใบนัดผู้ป่วย">
+                        <i class="fa-regular fa-calendar-check fa-1x mx-1"></i>
+                    </a>
+                    <a href="{% url 'Patient:export-patient-record' d.id %} " target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="ปริ้นต์ข้อมูลผู้ป่วย">
+                        <i class="fa-solid fa-print fa-1x mx-1"></i>
+                    </a>
+                </td> -->
+                <td data-label="ตัวเลือก">
+                    {% if user.is_nurse == True or user.is_superuser == True or user.is_staff == True %}
+                    <a href="{% url 'Patient:export-patient-record' d.id %} " target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="ปริ้นต์ข้อมูลผู้ป่วย">
+                        <i class="fa-solid fa-print fa-1x mx-1"></i>
+                    </a>
+                    <a href="{% url 'Patient:patient-update' d.id d.slug %} ">
+                        <i class="fa-solid fa-pen-to-square fa-1x mx-1"></i>
+                    </a>
+                    <i class="fa-solid fa-trash fa-1x mx-1 " data-bs-toggle="modal" data-bs-target="#exampleModal{{d.id}}"></i>
+                    <div class="modal fade" id="exampleModal{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">ยืนยันการลบข้อมูลผู้ป่วย</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body mb-4 mt-4">
+                                    ท่านต้องการลบข้อมูลของ <b>"{{ d.title }}{{ d.name }}"</b> ใช่หรือไม่ 
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col">
+                                        <a href="{% url 'Patient:patient-delete' d.id %} ">
+                                            <button type="button" class="btn btn-danger">ยืนยัน</button>
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a class="btn btn-primary" href="{% url 'Patient:export-patient-record' d.id %} " target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" title="ปริ้นต์ข้อมูลผู้ป่วย">
+                        <i class="fa-solid fa-print fa-1x mx-1 text-white"></i>
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <div class="row">
+        <div class="col">
+            {% if page_obj.has_other_pages %}
+            <div class="btn-group" role="group" aria-label="Item pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">&laquo;&nbsp;&nbsp;ก่อนหน้า</a> {% endif %} {% for page_number in page_obj.paginator.page_range %} {% if page_obj.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                        <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                    </button> {% else %}
+                <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                            {{ page_number }}
+                        </a> {% endif %} {% endfor %} {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">ต่อไป&nbsp;&nbsp;&raquo;</a> {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-2">
+            <div class="col float-end mx-4">
+                จำนวนทั้งหมด <b>{{ count }}</b> คน
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

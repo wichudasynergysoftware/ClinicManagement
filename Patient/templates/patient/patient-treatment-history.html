@@ -1,0 +1,92 @@
+<!DOCTYPE html>{% extends "layout/base.html"%} {% block title %} คลินิก | ประวัติการรักษาของผู้ป่วย {% endblock %} {% block content %}
+{% load crispy_forms_tags %} 
+<div class="col-lg-12">
+    <h2>ประวัติการรักษาของผู้ป่วย</h2>
+    <table class="table table-hover" style="text-align: center">
+        <thead>
+            <tr>
+                <th scope="col ">ครั้งที่</th>
+                <th scope="col ">ชื่อ-นามสกุล</th>
+                <th scope="col ">ผลการวินิจฉัย</th>
+                <th scope="col ">แพทย์เจ้าของไข้</th>
+                <th scope="col ">บัตรนัด</th>
+                <th scope="col ">ใบจ่ายยา</th>
+                <th scope="col ">รับการรักษาเมื่อวันที่</th>
+            </tr>
+        </thead>
+
+        <br> {% for d in page_obj %}
+        <tbody>
+            <tr>
+                <td data-label="ครั้งที่">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td data-label="ชื่อ-นามสกุล">{{ d.patientTitle }}{{ d.patientName }}</td>
+                <td data-label="ผลการวินิจฉัย" class="col-lg-3">
+                    {% if d.initialSymptoms == None %}
+                    -
+                    {% else %}
+                    {{ d.initialSymptoms }}
+                    {% endif %}
+                </td>
+                <td data-label="แพทย์เจ้าของไข้">
+                    {% if d.doctorName == None %}
+                    -
+                    {% else %}
+                    {{ d.doctorName }}
+                    {% endif %}
+                </td>
+                <td data-label="บัตรนัด">
+                    <!-- <a href="{% url 'Patient:export-patient-appointment-treatment' d.id %} " class="btn btn-success mx-1">
+                        <i class="fa-solid fa-calendar-check text-white"></i>&nbsp; บัตรนัด
+                    </a> -->
+                    {% if d.app == None %}
+                    <i class="fa-solid fa-calendar-xmark text-danger"></i>&nbsp; <p class="text-muted">ไม่มีบัตรนัด</p> 
+                    {% else %}
+                    <a class="btn btn-primary" href="{% url 'Patient:export-patient-appointment-treatment' d.id %} " data-bs-toggle="tooltip" data-bs-placement="top" title="ปริ้นต์ใบนัดผู้ป่วย">
+                        <i class="fa-solid fa-calendar-check text-white"></i>&nbsp; บัตรนัด
+                    </a>
+                    {% endif %} 
+                </td>
+                <td data-label="ใบจ่ายยา">
+                    <!-- <a href="{% url 'Patient:export-patient-prescriptions-treatment' d.id %} " class="btn btn-primary mx-1">
+                        <i class="fa-solid fa-tablets text-white"></i>&nbsp; ใบจ่ายยา
+                    </a> -->
+                    {% if d.pres == None %}
+                    <i class="fa-solid fa-square-xmark text-danger"></i><p class="text-muted">ไม่มีใบจ่ายยา</p> 
+                    {% else %}
+                    <a class="btn btn-success" href="{% url 'Patient:export-patient-prescriptions-treatment' d.id %} ">
+                        <i class="fa-solid fa-tablets text-white"></i>&nbsp; ใบจ่ายยา
+                    </a>
+                    {% endif %}  
+                </td>
+                <td data-label="รับการรักษาเมื่อวันที่">{{ d.createdAt }}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <div class="row mb-5">
+        <div class="col">
+            {% if page_obj.has_other_pages %}
+            <div class="btn-group" role="group" aria-label="Item pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">&laquo;&nbsp;&nbsp;ก่อนหน้า</a> {% endif %} {% for page_number in page_obj.paginator.page_range %} {% if page_obj.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                        <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                    </button> {% else %}
+                <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                            {{ page_number }}
+                        </a> {% endif %} {% endfor %} {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">ต่อไป&nbsp;&nbsp;&raquo;</a> {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-3">
+            <div class="col float-end mx-4">
+                จำนวนทั้งหมด <b>{{ count }}</b> รายการ
+            </div>
+        </div>
+    </div>
+    <div class="row mb-5"></div>
+</div>
+
+{% endblock %}

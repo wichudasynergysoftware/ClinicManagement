@@ -1,0 +1,127 @@
+<!DOCTYPE html>{% extends "layout/base.html"%}{% block title %} คลินิก | ข้อมูลส่วนตัวของผู้ใช้ {% endblock %}{% block content %}
+<div class="col-lg-12 mx-3">
+    <h2>ข้อมูลส่วนตัวของผู้ใช้</h2>
+    {% if obj == 1 %}
+    <div class="row">
+        <div class="col">
+            <div class="profile">
+                <div class="row mx-3">
+                    <h4>ข้อมูลทั่วไป</h4>
+                </div>
+                <div class="row mt-4 mb-4">
+                    <div class="col-lg-3">
+                        {% if img %}
+                            <p>ไม่มีรูปภาพ</p>
+                        {% else %}
+                            <img src="{{ profile.img.url }}" class="img-rounded" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-4"><b>ชื่อและนามสกุล</b></div>
+                            <div class="col">{{ user.title }}{{ user.first_name }} {{ user.last_name }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4"><b>อายุ</b></div>
+                            <div class="col">{{ profile.age }} ปี</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4"><b>วันเกิด</b></div>
+                            <div class="col">{{ x }}</div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-lg-6"><b>เพศ</b></div>
+                            <div class="col-lg">{{ profile.gender }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6"><b>เบอร์โทรศัพท์มือถือ</b></div>
+                            <div class="col-lg">{{ profile.phone }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6"><b>เลขบัตรประจำตัวประชาชน</b></div>
+                            <div class="col-lg">{{ profile.idCard }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6"><b>ที่อยู่อาศัย</b></div>
+                            <div class="col-lg">{{ profile.address }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-0">
+        <div class="col-lg-4">
+            <div class="profile-user">
+                <div class="row mx-3">
+                    <h4>ข้อมูลบัญชี</h4>
+                </div>
+                <div class="row mx-3">
+                    <div class="col-lg-4"><b>ชื่อผู้ใช้</b></div>
+                    <div class="col">{{ user.username }}</div>
+                </div>
+                <div class="row mb-4 mx-3">
+                    <div class="col-lg-4"><b>ที่อยู่อีเมล์</b></div>
+                    <div class="col-lg">{{ user.email }}</div>
+                </div>
+            </div>
+            <div class="profile-user1">
+                <div class="row mx-3">
+                    <h4>รูปภาพใบประกอบวิชาชีพ</h4>
+                </div>
+                <div class="row mx-3">
+                    <div class="col mb-3">
+                        {% if medicalLicense %}
+                            <p>ไม่มีรูปภาพใบประกอบวิชาชีพ</p>
+                        {% else %}
+                            <img src="{{ profile.medicalLicense.url }}" class="med-rounded rounded" alt="">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="profile-user2">
+                <div class="row mx-3">
+                    <h4>ข้อมูลการเข้าใช้งานระบบ</h4>
+                </div>
+                <div class="row mx-3">
+                    <div class="col-lg-4"><b>กำลังใช้งานระบบ</b></div>
+                    {% if is_active %}
+                        <div class="col-lg">
+                            <i class="fa-solid fa-square-xmark" style="color:red;"></i>
+                        </div>
+                    {% else %}
+                        <div class="col-lg">
+                            <i class="fa-solid fa-square-check" style="color:green;"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="row mx-3">
+                    <div class="col-lg-4"><b>วันที่สร้างข้อมูล</b></div>
+                    <div class="col-lg">{{ user.date_joined }}</div>
+                </div>
+                <div class="row mx-3">
+                    <div class="col-lg-4"><b>เข้าใช้งานล่าสุด</b></div>
+                    <div class="col-lg">{{ user.last_login }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %} 
+    <div class="d-flex align-items-center justify-content-center mt-5">
+        <div class="row">
+            <div class="row-lg">
+                <h5>{{ profile }}</h5>
+            </div>
+            <div class="row-lg-5 mt-3">
+                <a class="btn btn-outline-success" href="{% url 'ClinicManagement:edit-user-profile' %}" style="margin-left:35px">เพิ่มข้อมูลส่วนตัว</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

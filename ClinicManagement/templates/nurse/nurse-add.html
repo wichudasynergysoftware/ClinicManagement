@@ -1,0 +1,42 @@
+<!DOCTYPE html> {% extends "layout/base.html"%}{% block title %} คลินิก | เพิ่มข้อมูลพยาบาล {% endblock %} {% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="col-lg-11 mb-5 mx-3">
+    <h2>เพิ่มข้อมูลพยาบาล</h2>
+    <form method="POST" enctype="multipart/form-data" novalidate>
+        <div class="row">
+            <div class="col-lg">
+                {% csrf_token %}           
+                <div class="form-group">
+                    {{ form.title|as_crispy_field }}
+                </div><br>
+                <div class="row mt-0">
+                    <div class="col">
+                        <div class="form-group">
+                            {{ form.first_name|as_crispy_field }}
+                        </div><br>
+                    </div>
+                    <div class="col">
+                        <div class="form-group">
+                            {{ form.last_name|as_crispy_field }}
+                        </div><br>
+                    </div>
+                </div>
+                <div class="form-group">
+                    {{ form.username|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.password1|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.password2|as_crispy_field }}
+                </div><br>   
+                <div class="form-group">
+                    {{ form.email|as_crispy_field }}
+                </div><br>  
+                <button class="btn btn-success" type="submit">บันทึก</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

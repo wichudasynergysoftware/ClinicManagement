@@ -1,0 +1,168 @@
+<!DOCTYPE html> {% extends "layout/base.html" %} {% block title %} คลินิก | จัดการหน่วยยา {% endblock %}{% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="col-lg-12">
+    <h2 class="pb-4 px-2">จัดการหน่วยยา</h2>
+    <div class="row px-2 mt-0">
+        <div class="col">
+            <a class="btn btn-primary" href="{% url 'Unit:show-units' %}">
+                <i class="fa-solid fa-caret-left text-white"></i>
+                <span>&nbsp;กลับ</span>
+            </a>
+        </div>
+        <div class="col">
+            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;" class="btn btn-success float-end">
+                <i class="fa-solid fa-plus text-white"></i>
+                <span>&nbsp;เพิ่ม</span>
+            </button>
+            <div id="id01" class="modal1">
+                <form class="modal-content1 animate" action="{% url 'Unit:add-medicine-unit' %}" method="post">
+                    <div class="container">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel4">เพิ่มชื่อหน่วยยา</h1>
+                            <button onclick="document.getElementById('id01').style.display='none'" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body mb-4 mt-4">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    {% csrf_token %}
+                                    <label for="name" class="py-3">ชื่อหน่วยยา</label>
+                                    <input type="text" class="form-control" name="name" placeholder="ระบุหน่วยยา.." required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col">
+                                <div class="col float-end mt-5">
+                                    <button type="submit" class="btn btn-success">บันทึก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <script>
+                var modal = document.getElementById('id01');
+                window.onclick = function(event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+            </script>
+        </div>
+    </div>
+
+    <table class="table table-hover" style="text-align: center">
+        <thead>
+            <tr>
+                <th scope="col ">#</th>
+                <th scope="col ">ชื่อหน่วยยา</th>
+                <th scope="col ">เพิ่มเมื่อ</th>
+                <th scope="col ">แก้ไขล่าสุด</th>
+                <th scope="col ">แก้ไข</th>
+                <th scope="col ">ลบ</th>
+            </tr>
+        </thead>
+
+        <br> {% for d in page_obj %}
+        <tbody>
+            <tr>
+                <td data-label="#">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td data-label="ชื่อหน่วยยา">{{ d.name }}</td>
+                <td data-label="เพิ่มเมื่อ">{{ d.createdAt }}</td>
+                <td data-label="แก้ไขล่าสุด">{{ d.updatedAt }}</td>
+                <td data-label="แก้ไข">
+                    <button class="btn btn-warning mx-2" onclick="document.getElementById('edit{{d.id}}').style.display='block'" style="color:black; cursor:pointer;">
+                        <i class="fa-solid fa-pen-to-square"></i>&nbsp; แก้ไข
+                    </button>
+                    <div id="edit{{d.id}}" class="modal1">
+                        <form class="modal-content1 animate" action="{% url 'Unit:update-medicine-unit' d.id %}" method="post">
+                            <div class="container">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="editModalLabel4">แก้ไขชื่อหน่วยยา</h1>
+                                    <button onclick="document.getElementById('edit{{d.id}}').style.display='none'" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body mb-4 mt-4">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <label for="name" class="py-3">ชื่อหน่วยยา</label>
+                                            <input type="text" class="form-control" name="name" value="{{d.name}}">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col">
+                                        <div class="col float-end">
+                                            <button type="submit" class="btn btn-success">บันทึก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <script>
+                        var modal = document.getElementById('edit');
+                        window.onclick = function(event) {
+                            if (event.target == modal) {
+                                modal.style.display = "none";
+                            }
+                        }
+                    </script>
+                </td>
+                <td data-label="ลบ">
+                    <button class="btn btn-danger mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal{{d.id}}"><i class="fa-solid fa-trash-can text-white"></i>&nbsp; ลบ</button>
+                    <div class="modal fade" id="exampleModal{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">ยืนยันการลบหน่วยยา</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body mb-4 mt-4">
+                                    ท่านต้องการลบรายการ <b>"{{ d.name }}"</b> ใช่หรือไม่ 
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col">
+                                        <a href="{% url 'Unit:delete-medicine-unit' d.id %} ">
+                                            <button type="button" class="btn btn-danger">ยืนยัน</button>
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <div class="row">
+        <div class="col">
+            {% if page_obj.has_other_pages %}
+            <div class="btn-group" role="group" aria-label="Item pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">&laquo;&nbsp;&nbsp;ก่อนหน้า</a> {% endif %} {% for page_number in page_obj.paginator.page_range %} {% if page_obj.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                        <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                    </button> {% else %}
+                <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                            {{ page_number }}
+                        </a> {% endif %} {% endfor %} {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">ต่อไป&nbsp;&nbsp;&raquo;</a> {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-3">
+            <div class="col float-end mx-4">
+                จำนวนทั้งหมด <b>{{ count }}</b> รายการ
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

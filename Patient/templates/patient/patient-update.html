@@ -1,0 +1,53 @@
+<!DOCTYPE html> {% extends "layout/base.html" %} {% block title %} คลินิก | แก้ไขข้อมูลผู้ป่วย {% endblock %}{% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="col-lg-12">
+    <h2>แก้ไขข้อมูลผู้ป่วย</h2>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    {{ form.hn|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.title|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.name|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.gender|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.bloodType|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.underlyingDisease|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.dob|as_crispy_field }}
+                </div><br>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    {{ form.phone|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.idCard|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.address|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.email|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.img|as_crispy_field }}
+                </div><br>
+                <button type="submit" class="btn btn-success">บันทึก</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

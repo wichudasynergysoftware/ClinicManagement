@@ -1,0 +1,120 @@
+<!DOCTYPE html>{% extends "layout/base.html"%} {% block title %} คลินิก | รายการแพทย์ทั้งหมด {% endblock %} {% block content %}
+<div class="col-lg-12">
+    <h2>รายการแพทย์ทั้งหมด</h2>
+    <div class="row">
+        <div class="col-lg-9">
+            <a href="{% url 'ClinicManagement:doctor-add' %}" class="btn btn-success">เพิ่มข้อมูลแพทย์</a>
+        </div>
+        <div class="col-lg-3">
+            <form class="d-flex" role="search" action="{% url 'ClinicManagement:doctor-search' %}">
+                <input class="form-control me-2" type="search" placeholder="ระบุชื่อ" aria-label="Search" name="q" />
+                <button class="btn btn-success" type="submit">ค้นหา</button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-hover table-borderless" style="text-align: center">
+        <thead>
+            <tr>
+                <th scope="col ">#</th>
+                <th scope="col ">คำนำหน้าชื่อ</th>
+                <th scope="col ">ชื่อ-นามสกุล</th>
+                <th scope="col ">อีเมล์</th>
+                <th scope="col ">ชื่อผู้ใช้</th>
+                <th scope="col ">ใช้งาน</th>
+                <th scope="col ">เพิ่มเมื่อ</th>
+                <th scope="col ">เข้าใช้งานล่าสุด</th>
+                <th scope="col ">ตัวเลือก</th>
+            </tr>
+        </thead>
+
+        <br> {% for d in page_obj %}
+        <tbody>
+            <tr>
+                <td data-label="#">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td data-label="คำนำหน้าชื่อ">{{ d.title }}</td>
+                <td data-label="ชื่อ-นามสกุล">
+                    <a href="{% url 'ClinicManagement:doctor-detail' d.id d.slug %} " style="text-decoration: none;">{{ d.first_name }} {{d.last_name}}</a>
+                </td>
+                <td data-label="คำนำหน้าชื่อ">{{ d.email }}</td>
+                <td data-label="ชื่อผู้ใช้">{{ d.username }}</td>
+                <td data-label="ใช้งาน">
+                    {% if d.last_login == None %}
+                        <div class="col-lg">
+                            <i class="fa-solid fa-square-xmark" style="color:red;"></i>
+                        </div>
+                    {% else %}
+                        <div class="col-lg">
+                            <i class="fa-solid fa-square-check" style="color:green;"></i>
+                        </div>
+                    {% endif %}
+                </td>
+                <td data-label="เพิ่มเมื่อ">{{ d.date_joined }}</td>
+                <td data-label="เข้าใช้งานล่าสุด">
+                    {% if d.last_login == None %}
+                        <div class="col-lg">
+                            ไม่มีการเข้าใช้งาน
+                        </div>
+                    {% else %}
+                        <div class="col-lg">
+                            {{d.last_login}}
+                        </div>
+                    {% endif %}
+                </td>
+                <td data-label="ตัวเลือก">
+                    <a href="{% url 'ClinicManagement:doctor-update' d.id d.slug %} "><i class="fa-solid fa-pen-to-square fa-1x mx-1" style="color:black"></i></a>
+                    <i class="fa-solid fa-trash fa-1x mx-1 " data-bs-toggle="modal" data-bs-target="#exampleModal{{d.id}}" style="color:black; cursor:pointer; "></i>
+                    <div class="modal fade" id="exampleModal{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">ยืนยันการลบข้อมูลแพทย์</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body mb-4 mt-4">
+                                    ท่านต้องการลบข้อมูลของ <b>"{{ d.title }}{{ d.first_name }} {{d.last_name}}"</b> ใช่หรือไม่ 
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col">
+                                        <a href="{% url 'ClinicManagement:doctor-delete' d.id %} ">
+                                            <button type="button" class="btn btn-danger">ยืนยัน</button>
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <div class="row">
+        <div class="col">
+            {% if page_obj.has_other_pages %}
+            <div class="btn-group" role="group" aria-label="Item pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">&laquo;&nbsp;&nbsp;ก่อนหน้า</a> {% endif %} {% for page_number in page_obj.paginator.page_range %} {% if page_obj.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                        <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                    </button> {% else %}
+                <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                            {{ page_number }}
+                        </a> {% endif %} {% endfor %} {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">ต่อไป&nbsp;&nbsp;&raquo;</a> {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-2">
+            <div class="col float-end mx-4">
+                จำนวนทั้งหมด <b>{{ count }}</b> คน
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

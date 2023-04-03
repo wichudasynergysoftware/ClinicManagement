@@ -1,0 +1,20 @@
+<!DOCTYPE html> {% extends "layout/base.html" %}{% block title %} คลินิก | ปฏิทินการนัดหมายคนไข้ {% endblock %} {% load humanize %} {% load crispy_forms_tags %} 
+{% block content %}
+
+<div class="col-lg-12 mb-5">
+    <h2>ปฏิทินการนัดหมายคนไข้</h2>
+    <div class="row">
+        <div class="col">
+            <a class="btn btn-outline-success right mx-3" href="{% url 'Appointment:calendar' %}?{{ next_month }}">เดือนถัดไป&nbsp;
+                <i class="fa-solid fa-forward" style="color: green"></i>
+            </a>
+            <a class="btn btn-outline-success right" href="{% url 'Appointment:calendar' %}?{{ prev_month }}">
+                <i class="fa-solid fa-backward" style="color: green"></i>&nbsp;&nbsp;เดือนก่อนหน้า
+            </a>
+        </div>
+    </div>
+    <br>
+    {{ calendar }}
+</div>
+
+{% endblock %}

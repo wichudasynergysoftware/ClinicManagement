@@ -1,0 +1,111 @@
+<!DOCTYPE html>{% extends "layout/base.html"%} {% block title %} คลินิก | รายการยาทั้งหมด {% endblock %} {% block content %}
+<div class="col-lg-12">
+    <h2>รายการยาทั้งหมด</h2>
+    <div class="row">
+        <div class="col-lg-9">
+            <a href="{% url 'MedicineStock:medicine-add' %}" class="btn btn-success">เพิ่มข้อมูลยา</a>
+        </div>
+        <div class="col-lg-3">
+            <form class="d-flex" role="search" action="{% url 'MedicineStock:medicine-search' %}">
+                <input class="form-control me-2" type="search" placeholder="ระบุชื่อ" aria-label="Search" name="q" />
+                <button class="btn btn-success" type="submit">ค้นหา</button>
+            </form>
+        </div>
+    </div>
+
+    <table class="table table-hover" style="text-align: center">
+        <thead>
+            <tr>
+                <th scope="col ">#</th>
+                <th scope="col ">ชื่อยา</th>
+                <th scope="col ">รหัสยา</th>
+                <th scope="col ">ประเภทยา</th>
+                <th scope="col ">สรรพคุณ</th>
+                <th scope="col ">คำเตือนการใช้ยา</th>
+                <th scope="col ">หน่วยนับ</th>
+                <th scope="col ">หน่วยบรรจุ</th>
+                <th scope="col ">ราคาซื้อ</th>
+                <th scope="col ">ราคาขาย</th>
+                <th scope="col ">ตัวเลือก</th>
+            </tr>
+        </thead>
+
+        <br> {% for d in page_obj %}
+        <tbody>
+            <tr>
+                <td data-label="#">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td data-label="ชื่อยา">
+                    <a href="{% url 'MedicineStock:medicine-detail' d.id d.slug %} " style="text-decoration: none;">{{ d.name }}</a>
+                </td>
+                <td data-label="รหัสยา">{{ d.medCode }}</td>
+                <td data-label="ประเภทยา">{{ d.type }}</td>
+                <td data-label="สรรพคุณ" class="col-2">{{ d.indication }}</td>
+                <td data-label="คำเตือนการใช้ยา" class="col-2">{{ d.direction }}</td>
+                <td data-label="หน่วยนับ">{{ d.countingUnit }}</td>
+                <td data-label="หน่วยบรรจุ">{{ d.packingUnit }}</td>
+                <td data-label="ราคาซื้อ">{{ d.costPrice }}</td>
+                <td data-label="ราคาขาย">{{ d.sellingPrice }}</td>
+                <td data-label="ตัวเลือก">
+                    <a href="{% url 'MedicineStock:medicine-update' d.id d.slug %} "><i class="fa-solid fa-pen-to-square fa-1x mx-1" style="color:black"></i></a>
+                    <i class="fa-solid fa-trash fa-1x mx-1 " data-bs-toggle="modal" data-bs-target="#exampleModal{{d.id}}" style="color:black; cursor:pointer; "></i>
+                    <div class="modal fade" id="exampleModal{{d.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">ยืนยันการลบข้อมูลยา</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body mb-4 mt-4">
+                                    ท่านต้องการลบข้อมูลยา <b>"{{ d.name }}"</b> ใช่หรือไม่ 
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="col">
+                                        <a href="{% url 'MedicineStock:medicine-delete' d.id %} ">
+                                            <button type="button" class="btn btn-danger">ยืนยัน</button>
+                                        </a>
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยกเลิก</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+
+    <div class="row">
+
+        <div class="col">
+            <div class="amount">
+                {% if page_obj.has_other_pages %}
+                <div class="btn-group" role="group" aria-label="Item pagination">
+                    {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-primary">&laquo;&nbsp;&nbsp;ก่อนหน้า</a> {% endif %} {% for page_number in page_obj.paginator.page_range %} {% if page_obj.number == page_number %}
+                    <button class="btn btn-outline-primary active">
+                            <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                        </button> {% else %}
+                    <a href="?page={{ page_number }}" class="btn btn-outline-primary">
+                                {{ page_number }}
+                            </a> {% endif %} {% endfor %} {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-primary">ต่อไป&nbsp;&nbsp;&raquo;</a> {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="col float-end mx-4">
+                <div class="amount">
+                    จำนวนทั้งหมด <b>{{ count }}</b> รายการ
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

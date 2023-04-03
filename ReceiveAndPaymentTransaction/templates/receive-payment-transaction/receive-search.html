@@ -1,0 +1,100 @@
+<!DOCTYPE html> {% extends "layout/base.html"%}{% block title %} คลินิก | ค้นหารายการรับจ่าย {% endblock %}{% load humanize %} {% block content %}
+<div class="col-lg-12 mb-5">
+    <h2>รายการรายรับรายจ่ายทั้งหมด</h2>
+    <div class="row">
+        <div class="col-lg-9">
+            <h5>
+                รายการค้นหา <b>{{ count }}</b> รายการ
+            </h5>
+        </div>
+        <div class="col-lg-3">
+            <form method="GET" class="d-flex" role="search" action="{% url 'ReceiveAndPaymentTransaction:receive-search'%}">
+                <input class="form-control me-2" value="{{ request.GET.q }}" type="search" placeholder="ระบุชื่อ" aria-label="Search" name="q" />
+                <button class="btn btn-success" type="submit">ค้นหา</button>
+            </form>
+        </div>
+    </div>
+    <table class="table table-hover table-borderless" style="text-align: center ">
+        <thead>
+            <tr>
+                <th scope="col ">#</th>
+                <th scope="col ">วัน/เดือน/ปี</th>
+                <th scope="col ">ชื่อรายการ</th>
+                <th scope="col ">ประเภทรายการ</th>
+                <th scope="col ">จำนวนเงิน</th>
+                <th scope="col ">หมายเหตุ</th>
+                <th scope="col ">แก้ไขล่าสุด</th>
+                <th scope="col ">ตัวเลือก</th>
+            </tr>
+        </thead>
+
+        <br> {% for result in page_obj %}
+        <tbody>
+            <tr>
+                <td data-label="#">{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td data-label="วัน/เดือน/ปี">{{ result.createdAt }}</td>
+                <td data-label="ชื่อรายการ">{{ result.name }}</td>
+                <td data-label="ประเภทรายการ">{{ result.type }}</td>
+                <td data-label="จำนวนเงิน">{{ result.amount|intcomma }}</td>
+                <td data-label="หมายเหตุ">
+                    {% if result.remark == None or result.remark == "None" %}-{% else %}{{ result.remark }}{% endif %}
+                </td>
+                <td data-label="แก้ไขล่าสุด">{{ result.updatedAt }}</td>
+                <td data-label="ตัวเลือก">
+                    <a href="{% url 'ReceiveAndPaymentTransaction:receive-update' result.id %} "><i class="fa-solid fa-pen-to-square fa-1x mx-1 " style="color:black"></i></a>
+                    <i class="fa-solid fa-trash fa-1x mx-1 " data-bs-toggle="modal" data-bs-target="#exampleModal1{{result.id}}" style="color:black; cursor:pointer;">
+                        <div class="modal fade" id="exampleModal1{{result.id}}" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalLabel1">ยืนยันการลบข้อมูลคนไข้</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body mb-4 mt-4">
+                                        ท่านต้องการลบข้อมูลของ "{{ result.title }}{{ result.name }}" ใช่หรือไม่ 
+                                    </div>
+                                    <div class="modal-footer">
+                                        <div class="col">
+                                            <a href="{% url 'ReceiveAndPaymentTransaction:receive-delete' result.id %} ">
+                                                <button type="button" class="btn btn-danger">ยืนยัน</button>
+                                            </a>
+                                        </div>
+                                        <div class="col">
+                                            <button type="button" class="btn btn-success" data-bs-dismiss="modal">ยกเลิก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </i>
+                </td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <div class="row">
+        <div class="col">
+            {% if page_obj.has_other_pages %}
+            <div class="btn-group" role="group" aria-label="Item pagination">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-outline-primary">&laquo;&nbsp;&nbsp;ก่อนหน้า</a> {% endif %}{% for page_number in page_obj.paginator.page_range %}
+                {% if page_obj.number == page_number %}
+                <button class="btn btn-outline-primary active">
+                    <span>{{ page_number }} <span class="sr-only">(current)</span></span>
+                </button> {% else %}
+                <a href="?page={{ page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-outline-primary">
+                    {{ page_number }}
+                </a> {% endif %} {% endfor %} {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-outline-primary">ต่อไป&nbsp;&nbsp;&raquo;</a> {% endif %}
+            </div>
+            {% endif %}
+        </div>
+        <!-- <div class="col-2">
+            <div class="col float-end mx-4">
+                จำนวนทั้งหมด <b>{{ count }}</b> คน
+            </div>
+        </div> -->
+    </div>
+</div>
+
+{% endblock %}

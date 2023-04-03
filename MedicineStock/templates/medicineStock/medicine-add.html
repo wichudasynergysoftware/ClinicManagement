@@ -1,0 +1,59 @@
+<!DOCTYPE html> {% extends "layout/base.html"%} {% block title %} คลินิก | เพิ่มรายการยา {% endblock %}{% load humanize %} {% load crispy_forms_tags %} {% block content %}
+
+<div class="col-lg-12">
+    <h2>เพิ่มข้อมูลยา</h2>
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="form-group">
+                    {{ form.medCode|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.type|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.nlem|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.name|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.tradeName|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.genericName|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.initial|as_crispy_field }}
+                </div><br>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <div class="row my-0">
+                        <div class="col">{{ form.countingUnit|as_crispy_field }}</div>
+                        <div class="col">{{ form.packingUnit|as_crispy_field }}</div>
+                    </div>
+                </div><br>
+                <div class="form-group">
+                    {{ form.costPrice|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.sellingPrice|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.medicineStrength|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.indication|as_crispy_field }}
+                </div><br>
+                <div class="form-group">
+                    {{ form.direction|as_crispy_field }}
+                </div><br>
+                <button type="submit" class="btn btn-success">บันทึก</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

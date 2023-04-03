@@ -1,0 +1,64 @@
+<!DOCTYPE html>{% extends "layout/base.html"%} {% block title %} คลินิก | รายละเอียดข้อมูลยา {% endblock %}{% block content %}
+<div class="col-lg-12">
+    <h2>รายละเอียดข้อมูลยา</h2>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-4"><b>ชื่อยา</b></div>
+                <div class="col-lg-8">{{ data.name }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>รหัสยา</b></div>
+                <div class="col-lg-8">{{ data.medCode }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>บัญชียาหลักแห่งชาติ</b></div>
+                <div class="col-lg-8">{{ data.nlem }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>ชื่อทางการค้า</b></div>
+                <div class="col-lg-8">{{ data.tradeName }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>ชื่อยาสามัญ</b></div>
+                <div class="col-lg-8">{{ data.genericName }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>อักษรย่อ</b></div>
+                <div class="col-lg-8">{{ data.initial }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>หน่วยนับ</b></div>
+                <div class="col-lg-8">{{ data.countingUnit }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>หน่วยบรรจุ</b></div>
+                <div class="col-lg-8">{{ data.packingUnit }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>ความแรงของยา</b></div>
+                <div class="col-lg-8">{{ data.medicineStrength }}</div>
+            </div>            
+        </div>
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-4"><b>สรรพคุณของยา</b></div>
+                <div class="col-lg-8">{{ data.indication }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>คำเตือนการใช้ยา</b></div>
+                <div class="col-lg-8">{{ data.direction }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>เพิ่มข้อมูลเมื่อ</b></div>
+                <div class="col-lg-8">{{ data.createdAt }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>แก้ไข้ข้อมูลเมื่อ</b></div>
+                <div class="col-lg-8">{{ data.updatedAt }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

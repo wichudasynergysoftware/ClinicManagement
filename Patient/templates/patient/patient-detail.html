@@ -1,0 +1,103 @@
+<!DOCTYPE html>{% extends "layout/base.html" %} {% block title %} คลินิก | รายละเอียดข้อมูลผู้ป่วย {% endblock %}{% block content %}
+<div class="col-lg-12">
+    <h2>รายละเอียดข้อมูลผู้ป่วย</h2>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-4"><b>เลขประจำตัวผู้ป่วย</b></div>
+                <div class="col-lg-8">{{ data.hn }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>ชื่อและนามสกุล</b></div>
+                <div class="col-lg-8">{{ data.title }}{{ data.name }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>อายุ</b></div>
+                <div class="col-lg-8">{{ data.age }} &nbsp;&nbsp;&nbsp; ปี</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>เลขบัตรประจำตัวประชาชน</b></div>
+                <div class="col-lg-8">{{ data.idCard }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>เพศ</b></div>
+                <div class="col-lg-8">{{ data.gender }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>หมู่เลือด</b></div>
+                <div class="col-lg-8">{{ data.bloodType }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>โรคประจำตัว</b></div>
+                <div class="col-lg-8">
+                    {% if data.underlyingDisease == None %}ไม่มีโรคประจำตัว{% else %} {{ data.underlyingDisease }} {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>เกิดเมื่อ</b></div>
+                <div class="col-lg-8">{{ x }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>เบอร์โทรศัพท์มือถือ</b></div>
+                <div class="col-lg-8">{{ data.phone }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>ที่อยู่อีเมล์</b></div>
+                <div class="col-lg-8">{{ data.email }}</div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-lg-4"><b>ที่อยู่</b></div>
+                <div class="col-lg-8">{{ data.address }}</div>
+            </div>
+            <div class="row">
+                {% if data.img %}
+                <div class="col-lg-4"><b>รูปภาพ</b></div>
+                <div class="col-lg-8">
+                    <img src="{{ data.img.url }}" class="rounded" alt="" style="width:150px;">
+                </div>
+                {% else %}
+                <div class="col-lg-4"><b>รูปภาพ</b></div>
+                <div class="col-lg-8">
+                    <img src="https://northphoenixprep.greatheartsamerica.org/wp-content/uploads/sites/21/2016/11/default-placeholder.png" class="rounded" alt="" style="width:150px;">
+                </div>
+                {% endif %}
+            </div>
+            {% if allergic %}
+            <div class="row mt-5">
+                <div class="col-lg-4"><b>ประวัติการแพ้ยา</b></div>
+                <div class="col-lg-8">
+                    {% for a in allergic %}
+                    <div class="row mt-0">
+                        <div class="col mb-3">ชื่อยา : {{ a.allergicMedicineName }}</div>
+                        <div class="col mb-3">อาการ : {{ a.allergicSymptom }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% else %}
+            <div class="row">
+                <div class="col-lg-4"><b>ประวัติการแพ้ยา</b></div>
+                <div class="col-lg-8">ไม่มีประวัติการแพ้ยา</div>
+            </div>
+            {% endif %}
+            <div class="row">
+                <div class="col-lg-4"><b>เพิ่มข้อมูลเมื่อ</b></div>
+                <div class="col-lg-8">{{ data.createdAt }}</div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4"><b>แก้ไข้ข้อมูลเมื่อ</b></div>
+                <div class="col-lg-8">{{ data.updatedAt }}</div>
+            </div>      
+            <div class="row">
+                <div class="col-lg-4"><b>ดูประวัติการรักษา</b></div>
+                <div class="col-lg-8">
+                    <a href="{% url 'Patient:show-patient-treatment-history' data.id %}" class="btn btn-outline-success">ดูประวัติการรักษา</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load active_link_tags %} {% url 'ClinicManagement:doctor-list' as doctorlist %}{% url 'ClinicManagement:doctor-add' as doctoradd %} {% url 'ClinicManagement:doctor-index' as doctorindex %} {% url 'ClinicManagement:nurse-list' as nurselist %}
+{% url 'MedicineStock:medicine-list' as medicinelist %}{% url 'Patient:patient-list' as patientlist %} {% url 'ReceiveAndPaymentTransaction:receive-list' as receivelist %}
+{% url 'Patient:patient-present-data' as presentdata %}{% url 'Patient:patient-queue-list' as patientqueuelist %}
+{% url 'Appointment:calendar' as showcalendar %}{% url 'Unit:show-units' as showunits %}{% url 'Patient:show-successful-treatment' as successfultreatment %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %} ระบบจัดการคลินิก {% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
+    <script src="https://kit.fontawesome.com/9918a0d039.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Kanit">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href= "https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.rtl.min.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.0/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <style>
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Kanit";
+        }
+        
+        body {
+            font-family: 'Kanit';
+            max-width: 99%;
+            background-color: #fff;
+            font-family: 'Kanit';
+        }
+
+        #side_nav{
+            background-color: rgb(255, 255, 255);
+            min-width: 250px;
+            max-width: 250px;
+            transition: all 0.3s;
+            box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 1px, rgba(0, 0, 0, 0.07) 0px 2px 2px, rgba(0, 0, 0, 0.07) 0px 4px 4px, rgba(0, 0, 0, 0.07) 0px 8px 8px, rgba(0, 0, 0, 0.07) 0px 16px 16px;
+        }
+        
+        .content{
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        hr.h-color{
+            border: 1px solid rgb(0, 0, 0);
+        }
+
+        .index1 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(234, 224, 218);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index2 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(247, 245, 235);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index3 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(160, 195, 210);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index4 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(234, 199, 199);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index-queue1 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(234, 199, 199);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index-queue2 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(160, 195, 210);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index-queue3 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(247, 245, 235);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .index-queue4 {
+            margin-top: 1%;
+            width: 80%;
+            background-color: rgb(234, 224, 218);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 100px;
+        }
+
+        .name{
+            font-weight: bold;
+            margin-right: 70%;
+        }
+
+        .graph {
+            margin-top: 1%;
+            width: 28%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 300px;
+            margin-left: 10px;
+        }
+
+        .graph2 {
+            margin-top: 1%;
+            width: 28%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 300px;
+            margin-left: 65px;
+        }
+
+        .graph3 {
+            margin-top: 1%;
+            width: 28%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 300px;
+            margin-left: 60px;
+        }
+
+        .graph4 {
+            margin-top: 3%;
+            width: 96%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 1em;
+            min-height: 300px;
+        }
+
+        .present-patient-data {
+            margin-top: 3%;
+            width: 96%;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 5px;
+            padding: 1em;
+            min-height: 300px;
+        }
+
+        .tooltip{
+            position: absolute;
+            top: -20px;
+            left: calc(100% + 15px);
+            z-index: 3;
+            background: #fff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 400;
+            opacity: 0;
+            white-space: nowrap;
+            pointer-events: none;
+            transition: 0s;
+            font-family: 'Kanit';
+        }
+
+        li:hover .tooltip{ 
+            opacity: 1;
+            pointer-events: auto;
+            transition: all 0.4s ease;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .sidebar.open li .tooltip{
+            display: none;
+        }
+        
+        .card-1 {
+            background-color: red;
+            max-width: 100%;
+        }
+        
+        .container-fluid{
+            max-width: 100%;
+        }
+        
+        .row {
+            margin-top: 30px;
+        }
+        
+        .img-rounded { 
+            border-radius: 50%; 
+            width: 180px;
+            height: 180px;
+            object-fit: cover;
+            object-fit: cover;
+            margin-left: 10%;
+        }
+        
+        .modal-content {
+            font-family: 'Kanit';
+        }
+        
+        .col-lg-2 {
+            width: 200px;
+        }
+        
+        span {
+            font-family: 'Kanit';
+        }
+        
+        .profile {
+            margin-top: 1%;
+            width: 97%;
+            height: auto;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            padding: 0.5em;
+        }
+        
+        .profile-user {
+            margin-top: 4%;
+            width: 100%;
+            padding: 0.5em;
+            height: auto;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+        }
+        
+        .profile-user1 {
+            margin-top: 4%;
+            padding: 0.5em;
+            width: 100%;
+            height: auto;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            min-height: 250px;
+        }
+        
+        .profile-user2 {
+            margin-top: 2%;
+            padding: 0.5em;
+            width: 95%;
+            height: auto;
+            background-color: rgb(255, 255, 255);
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            border-radius: 7px;
+            min-height: 490px;
+        }
+        
+        .med-rounded{
+            width: 250px;
+            margin-left: 10%;
+        }
+        
+        .actives {
+            color: rgb(48, 86, 189);
+            background-color: #ffffff;
+            width: 210px;
+            height: 50px;
+            border-end-end-radius: 35px;
+            border-top-right-radius: 35px;
+            border-top-left-radius: 35px;
+            border-bottom-left-radius: 35px;
+            position: relative;
+            right: 30px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px, rgba(0, 0, 0, 0.1) 0px 2px 4px 0px, rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
+            font-weight: bold;
+            clear: both;
+        }
+        
+        .actives i {
+            margin-left: 30px;
+            margin-top: 10px;
+            color: rgb(48, 86, 189);
+        }
+        
+        .sidebar li a {
+            color: rgb(0, 0, 0);
+            margin-left: 40px;
+        }
+
+        .sidebar li a:hover {
+            color: rgb(48, 86, 189);
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .actives i:hover {
+            color: #000000;
+        }
+
+        .content i{
+            color: #000000;
+            cursor: pointer;
+        }
+
+        .content i:hover {
+            color: rgb(0, 0, 0);
+            transform: scale(1.2);
+        }
+        
+        .btn {
+            box-shadow: 5px 5px 10px rgb(173, 174, 179);
+        }
+        
+        .amount {
+            height: 100px;
+        }
+        
+        .card {
+            margin-top: 10px;
+            transition: 0.3s;
+            border: 0;
+            background-color: rgb(255, 255, 255);
+            box-shadow: 5px 5px 10px rgb(173, 174, 179);
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+            transform: scale(0.9, 0.9);
+        }
+        
+        .content {
+            width: 100%;
+            min-height: 1050px;
+        }
+        
+        .modal1 {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+            font-family: 'Kanit';
+        }
+        
+        .modal-content1 {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto;
+            border: 1px solid #888;
+            width: 30%;
+            border-radius: 10px;
+        }
+        
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: red;
+            cursor: pointer;
+        }
+        
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s;
+        }
+        
+        .container {
+            padding: 16px;
+        }
+        
+        a{
+            text-decoration: none;
+        }
+        
+        .left {
+            float: left;
+        }
+        
+        .right {
+            float: right;
+        }
+        
+        .title {
+            text-align: center;
+            margin: 10px;
+            background-color: antiquewhite;
+        }
+        
+        .calendar {
+            width: 100%;
+            margin: auto;
+            font-size: 13px;
+        }
+        
+        .calendar td {
+            border: 2px solid #dedede;
+        }
+        
+        .calendar th {
+            padding: 10px;
+            text-align: center;
+            font-size: 18px;
+        }
+        
+        .calendar td {
+            background-color: rgb(255, 255, 255);
+            width: 200px;
+            height: 150px;
+            padding: 25px 0px 0px 10px;
+        }
+        
+        tr .month {
+            font-size: 25px;
+            color: rgb(0, 0, 0);
+            padding-right: 100px;
+        }
+        
+        .date {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .appointment-name {
+            color: rgb(48, 86, 189);
+            font-size: 14px;
+            font-weight: 800;
+        }
+        
+        .day-ul {
+            height: 100%;
+            padding: 0px 5px 0px 8px;
+        }
+        
+        .day-ul:hover {
+            font-size: 15px;
+        }
+        
+        .li-test{
+            list-style-type: circle;
+        }
+
+        .sticky-nav {
+            position: -webkit-sticky;
+            position: sticky;
+        }
+
+        @media screen and (max-width: 768px) and (max-width: 600px){
+            #side_nav{
+                margin-left: -250px;
+                position: fixed;
+                min-height: 100vh;
+                z-index: 1;
+            }
+
+            #side_nav.active{
+                margin-left: 0;
+            }
+
+            table {
+                border: 0;
+            }
+            
+            table thead {
+                border: none;
+                clip: rect(0 0 0 0);
+                height: 1px;
+                margin: -1px;
+                overflow: hidden;
+                padding: 0;
+                position: absolute;
+                width: 1px;
+            }
+            
+            table tr {
+                border-bottom: 3px solid #ddd;
+                display: block;
+                margin-bottom: .625em;
+            }
+            
+            table td {
+                border-bottom: 1px solid #ddd;
+                display: block;
+                font-size: .8em;
+                text-align: right;
+            }
+                    
+            table td::before {
+                content: attr(data-label);
+                float: left;
+                font-weight: bold;
+                text-transform: uppercase;
+            }
+            
+            table td:last-child {
+                border-bottom: 0;
+            }
+
+            .profile-user{
+                width: 98%;
+            }
+        
+            .profile-user1{
+                width: 98%;
+            }
+        
+            .profile-user2{
+                width: 98%;
+                margin-top: 5%;
+            }
+        
+            .img-rounded{
+                margin-left: 20%;
+            }
+        
+            .med-rounded{
+                width: 75%;
+            }
+
+            .index1 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index2 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index3 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index4 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index-queue1 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index-queue2 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index-queue3 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .index-queue4 {
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .graph {
+                width: 95%;
+            }
+
+            .graph2 {
+                width: 95%;
+                margin: 0;
+                margin-top: 20px;
+                margin-left: 10px;
+            }
+
+            .graph3 {
+                width: 95%;
+                margin: 0;
+                margin-top: 20px;
+                margin-left: 10px;
+            }
+
+            .graph4 {
+                width: 95%;
+                margin: 0;
+                margin-top: 20px;
+                margin-left: 10px;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container d-flex">
+        <div class="sidebar" id="side_nav" >
+            <div class="header-box mt-2 px-2 pt-3 pb-2 d-flex justify-content-between">
+                <h1 class="fs-4">
+                    <!-- <span class="bg-white text-dark rounded shadow px-2 me-2">MX</span> -->
+                    <span class="text-black mx-4">ระบบจัดการคลินิก</span>
+                </h1>
+                <button class="navbar-toggler d-md-none d-block close-btn px-1 mb-1 py-0 text-black">
+                    <i class="fa fa-stream"></i>
+                </button>
+            </div>
+            
+            <ul class="list-unstyled px-2 mt-2 mb-5">
+                {% if user.is_superuser == True or user.is_staff == True %}
+                <li>
+                    <a href="{% url 'ClinicManagement:doctor-index' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == doctorindex %} actives {% endif %}">
+                        <i class="fa-solid fa-chart-simple ">
+                            <span>&nbsp;&nbsp;แดชบอร์ด</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:patient-queue-list' %}" class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == patientqueuelist %} actives {% endif %}">
+                        <i class="fa-solid fa-person-arrow-up-from-line">
+                            <span>&nbsp;&nbsp;ลำดับผู้ป่วย</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:patient-present-data' %}" class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == presentdata %} actives {% endif %}">
+                        <!-- <i class="fa-solid fa-arrow-right">
+                            <span>&nbsp;&nbsp;ปัจจุบัน</span>
+                        </i> -->
+                        <i class="fa-solid fa-arrow-right"><span>&nbsp;&nbsp;ปัจจุบัน</span></i>
+                        <span class="bg-dark rounded-pill text-white py-0 px-2">{{empty}}</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:show-successful-treatment' %}" class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == successfultreatment %} actives {% endif %}">
+                        <i class="fa-solid fa-circle-check">
+                            <span>&nbsp;&nbsp;รักษาเสร็จสิ้น</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:patient-list' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == patientlist %} actives {% endif %}">
+                        <i class="fa-solid fa-bed ">
+                            <span>&nbsp;&nbsp;ผู้ป่วย</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Appointment:calendar' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == showcalendar %} actives {% endif %}">
+                        <i class="fa-solid fa-calendar-days">
+                            <span>&nbsp;&nbsp;นัดหมาย</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'ClinicManagement:doctor-list' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == doctorlist %} actives {% endif %}">
+                        <i class="fa-solid fa-user-doctor ">
+                            <span>&nbsp;&nbsp;แพทย์</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'ClinicManagement:nurse-list' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == nurselist %} actives {% endif %}">
+                        <i class="fa-solid fa-user-nurse ">
+                            <span>&nbsp;&nbsp;พยาบาล</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Unit:show-units' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == showunits %} actives {% endif %}">
+                        <i class="fa-brands fa-solid fa-ethereum">
+                            <span>&nbsp;&nbsp;หน่วยข้อมูล</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'MedicineStock:medicine-list' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == medicinelist %} actives {% endif %}">
+                        <i class="fa-solid fa-briefcase-medical ">
+                            <span>&nbsp;&nbsp;ยาในคลังยา</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'ReceiveAndPaymentTransaction:receive-list' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == receivelist %} actives {% endif %}">
+                        <i class="fa-solid fa-piggy-bank ">
+                            <span>&nbsp;&nbsp;การจัดการเงิน</span>
+                        </i>
+                    </a>
+                </li>
+                {% else %}
+                <li>
+                    <a href="{% url 'Patient:patient-queue-list' %}" class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == patientqueuelist %} actives {% endif %}">
+                        <i class="fa-solid fa-person-arrow-up-from-line">
+                            <span>&nbsp;&nbsp;ลำดับผู้ป่วย</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:patient-present-data' %}" class="text-decoration-none my-3 px-3 py-2 d-flex justify-content-between {% if request.path == presentdata %} actives {% endif %}">
+                        <i class="fa-solid fa-arrow-right">
+                            <span>&nbsp;&nbsp;ปัจจุบัน</span>
+                            <span class="bg-dark rounded-pill text-white py-0 px-2">{{ empty }}</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:show-successful-treatment' %}" class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == successfultreatment %} actives {% endif %}">
+                        <i class="fa-solid fa-circle-check">
+                            <span>&nbsp;&nbsp;รักษาเสร็จสิ้น</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Patient:patient-list' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == patientlist %} actives {% endif %}">
+                        <i class="fa-solid fa-bed ">
+                            <span>&nbsp;&nbsp;ผู้ป่วย</span>
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'Appointment:calendar' %} " class="text-decoration-none my-3 px-3 py-2 d-block {% if request.path == showcalendar %} actives {% endif %}">
+                        <i class="fa-solid fa-calendar-days">
+                            <span>&nbsp;&nbsp;นัดหมาย</span>
+                        </i>
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+
+            <hr class="h-color mx-3">
+
+            <ul class="list-unstyled px-2">
+                <div class="row mt-4 mx-2" style="box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px; 
+                font-size: 14px; background:rgb(58, 82, 114); padding: 0.5em; border-radius: 8px; font-weight:bold; color:rgb(255, 255, 255);">
+                    <div class="col-5 mt-2">
+                        <img src="{{ user.profile.img.url }}" class="rounded" alt="" style="min-width: 40px; max-width: 60px; max-height: 35px;">
+                    </div>
+                    <div class="col">{{user.title}}{{user.first_name}} {{user.last_name}}</div>
+                </div>
+            </ul>
+        </div>
+        <div class="content">
+            <div class="row mt-0">
+                <nav class="navbar navbar-expand-md navbar-light" style="min-height:90px; max-height:90px;">
+                    <div class="container-fluid">
+                        <div class="col-lg-3">
+                            <nav class="navbar navbar-expand-md navbar-light" style="min-height:90px; max-height:90px;">
+                                <div class="container-fluid">
+                                    <div class="d-flex justify-content-between d-md-none d-block">
+                                        <button class="btn open-btn me-2"><i class="fa fa-stream"></i></button>
+                                        <a class="navbar-brand" href="#">
+                                            ระบบจัดการคลินิก
+                                        </a>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="col-lg">
+                            {% if messages %} {% for msg in messages %} {% if msg.tags == 'success' %}
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>{{ msg }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endif %} {% if msg.tags == 'error' %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>{{ msg }}</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endif %} {% endfor %} {% endif %}
+                        </div>
+                        <div class="col-lg">
+                            <div class="container">
+                                <button class="navbar-toggler p-0 border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                    <i class="fa-solid fa-list"></i>
+                                </button>
+                                <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent1">
+                                    <ul class="navbar-nav mb-2 mb-lg-0">
+                                        <li class="nav-item">
+                                            <div class="display-date">
+                                                <span id="day" class="fw-bold">day</span>,
+                                                <span id="daynum" class="fw-bold">00</span>
+                                                <span id="month" class="fw-bold">month</span>
+                                                <span id="year" class="fw-bold">0000</span>
+                                            </div>
+                                            <div class="display-time fw-bold"></div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <div class="dropdown">
+                                                <a class="btn btn-success dropdown-toggle mx-3" href="# " role="button " data-bs-toggle="dropdown" aria-expanded="false">
+                                                {{ user.username }}
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li><a class="dropdown-item" href="{% url 'ClinicManagement:get-user-profile' user.username %}">ดูข้อมูลส่วนตัว</a></li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{% url 'ClinicManagement:edit-user-profile' %}">แก้ไขข้อมูลส่วนตัว</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{% url 'ClinicManagement:password_change' %}">เปลี่ยนรหัสผ่าน</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{% url 'ClinicManagement:logout' %} " class="btn btn-danger mx-3">
+                                                <i class="fa-solid fa-right-from-bracket text-white"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="dashboard-content px-4">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+         
+        window.setTimeout(function() {
+            $(".alert").fadeTo(1000, 0).slideUp(1000, function(){
+                $(this).remove(); 
+            });
+        }, 1000);
+        });
+    </script>
+
+    <script type="text/javascript">
+        const displayTime = document.querySelector(".display-time");
+
+        function showTime() {
+            let time = new Date();
+            displayTime.innerText = time.toLocaleTimeString("th-TH", { hour12: false });
+            setTimeout(showTime, 1000);
+        }
+
+        showTime();
+
+        function updateDate() {
+            let today = new Date();
+
+            //อันนี้จะเก็บพวกวัน เดือนปี ที่เอามาจาก date()
+            let dayName = today.getDay(),
+                dayNum = today.getDate(),
+                month = today.getMonth(),
+                year = today.getFullYear();
+                thai_year = year + 543
+
+            const months = [
+                "มกราคม",
+                "กุมภาพันธ์",
+                "มีนาคม",
+                "เมษายน",
+                "พฤษภาคม",
+                "มิถุนายน",
+                "กรกฏาคม",
+                "สิงหาคม",
+                "กันยายน",
+                "ตุลาคม",
+                "พฤศจิกายน",
+                "ธันวาคม",
+            ];
+            const dayWeek = [
+                "อาทิตย์",
+                "จันทร์",
+                "อังคาร",
+                "พุธ",
+                "พฤหัสบดี",
+                "ศุกร์",
+                "เสาร์",
+            ];
+            // value -> ID of the html element
+            const IDCollection = ["day", "daynum", "month", "year"];
+            // return value array with number as a index
+            const val = [dayWeek[dayName], dayNum, months[month], thai_year];
+            for (let i = 0; i < IDCollection.length; i++) {
+                document.getElementById(IDCollection[i]).firstChild.nodeValue = val[i];
+            }
+        }
+
+        updateDate();
+       
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $('#example').select2();
+
+        $( '#basic-usage' ).select2( {
+            theme: "bootstrap-5",
+            width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+            placeholder: $( this ).data( 'placeholder' ),
+        } );
+
+        $( '#med-unit' ).select2( {
+            theme: "bootstrap-5",
+            width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+            placeholder: $( this ).data( 'placeholder' ),
+        } );
+
+        $( '#multiple-select-field' ).select2( {
+            theme: "bootstrap-5",
+            width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+            placeholder: $( this ).data( 'placeholder' ),
+            closeOnSelect: false,
+        } );
+
+        $(".sidebar ul li").on("click", function(){
+            $(".sidebar ul li.active").removeClass("active");
+            $(this).addClass("active");
+        });
+
+        $(".open-btn").on('click', function(){
+            $('.sidebar').addClass('active');
+        });
+
+        $(".close-btn").on('click', function(){
+            $('.sidebar').removeClass('active');
+        })
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js " integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3 " crossorigin="anonymous "></script>
+</body>
+</html>

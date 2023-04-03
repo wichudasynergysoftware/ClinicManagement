@@ -1,0 +1,169 @@
+<!DOCTYPE html> {% extends "layout/base.html"%} {% block title %} คลินิก | Dashboard {% endblock %} {% block content %}
+{% load humanize %} {% load nvd3_tags %}
+<div class="col-lg-12 mb-5">
+    <h2>แดชบอร์ด</h2>
+    <div class="row">
+        <div class="col">
+            <div class="index1">
+                <h6 class="card-title mb-3 fw-bold">รายได้วันนี้</h6>
+                <h6>{{ receiveTodayVal|intcomma }} บาท</h6>
+            </div>
+        </div>
+        <div class="col">
+            <div class="index2">
+                <h6 class="card-title mb-3 fw-bold">รายจ่ายวันนี้</h6>
+                <h6>{{ paymentTodayVal|intcomma }} บาท</h6>
+            </div>
+        </div>
+        <div class="col">
+            <div class="index3">
+                <h6 class="card-title mb-3 fw-bold">รายได้ทั้งหมด</h6>
+                <h6>{{ totalReceive|intcomma }} บาท</h6>
+            </div>
+        </div>
+        <div class="col">
+            <div class="index4">
+                <h6 class="card-title mb-3 fw-bold">รายจ่ายทั้งหมด</h6>
+                <h6>{{ payment|intcomma }} บาท</h6>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="graph">
+            <h6 class="card-title fw-bold">รายรับและรายจ่าย</h6>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+            <canvas id="doughnut" width="280" height="240"></canvas>
+            <script>
+                let ctx1 = document.getElementById("doughnut").getContext("2d");
+                let chart1 = new Chart(ctx1, {
+                    type: "doughnut",
+                    data: {
+                        labels: ['รายรับ', 'รายจ่าย'],
+                        datasets: [
+                            {
+                                label: "รายรับและรายจ่าย",
+                                backgroundColor: ['#7895B2', '#AEBDCA'],
+                                borderColor: "white",
+                                data: {{ receive|safe }}
+                            }
+                        ]
+                    },
+                    options: {
+                        title: {
+                            display: true
+                        },
+                        plugins: {
+                            labels: {
+                              render: 'percentage',
+                              fontColor: ['white', 'white'],
+                              precision: 2
+                            }
+                        },
+                    }
+                });
+            </script>
+        </div>
+        <div class="graph2">
+            <h6 class="card-title fw-bold">ผู้ใช้งานระบบ</h6>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <canvas id="chart" width="280" height="240"></canvas>
+            <script>
+                let ctx = document.getElementById("chart").getContext("2d");
+                let number1 = {{ largest_number1 }};
+                let chart = new Chart(ctx, {
+                    type: "bar",
+                    data: {
+                        labels: ['แพทย์', 'พยาบาล'],
+                        datasets: [
+                            {
+                            label: "ผู้ใช้งานระบบ",
+                            backgroundColor: ['#898AA6', '#C9BBCF'],
+                            borderColor: "#417690",
+                            data: [{% for item in users %}{{ item }},{% endfor %}],
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: number1 + 3,
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+        <div class="graph3">
+            <h6 class="card-title mb-5 fw-bold">ผู้ป่วยแยกตามเพศ</h6>
+            <div id="container" style="width: 100%;">
+                <canvas id="pie-chart"></canvas>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            </div>
+            <script>
+                let number = {{ largest_number }};
+                var config = {
+                    type: 'bar',
+                    data: {
+                        datasets: [{
+                        data: [{% for item in data %}{{ item }},{% endfor %}],
+                        backgroundColor: ['#609966', '#9DC08B', '#EDF1D6'],
+                        label: 'ผู้ป่วย',
+                        borderWidth: 1,
+                        barThickness: 60,
+                        }],
+                        labels: [{% for item in labels %}"{{ item }}",{% endfor %}],
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: number + 2,
+                            }
+                        }
+                    }
+                };
+                window.onload = function() {
+                  var ctx = document.getElementById('pie-chart').getContext('2d');
+                  window.myPie = new Chart(ctx, config);
+                };
+            </script>
+            <br>
+            <p>ผู้ป่วยทั้งหมด {{patient}} คน</p>
+        </div>
+    </div>
+    <div class="graph4">
+        <h6 class="card-title fw-bold">รายรับและรายจ่ายในแต่ละเดือน</h6>
+        <canvas id="line" width="280" height="70"></canvas>
+        <script>
+            let ctx2 = document.getElementById("line").getContext("2d");
+            let chart2 = new Chart(ctx2, {
+                type: "line",
+                data: {
+                    labels: {{ thai_months|safe }},
+                    datasets: [
+                        {
+                            label: 'รายรับ',  
+                            borderColor: '#609966',
+                            tension: 0.1,
+                            data: [{% for item in incomes_per_month %}{{ item }},{% endfor %}],
+                            fill: false,
+                        },
+                        {
+                            label: 'รายจ่าย', 
+                            borderColor: '#DD4A48',
+                            tension: 0.1,
+                            data: [{% for item in expense_per_month %}{{ item }},{% endfor %}],
+                            fill: false,
+                        }
+                    ]
+                },
+            });
+        </script>
+    </div>
+    <div class="row"></div>
+</div>
+
+{% endblock %}

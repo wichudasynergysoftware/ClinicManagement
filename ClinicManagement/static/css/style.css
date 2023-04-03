@@ -1,0 +1,329 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Kanit";
+}
+
+body {
+    font-family: 'Kanit';
+    max-width: 100%;
+}
+
+.card-1 {
+    background-color: red;
+    max-width: 100%;
+}
+
+.container-fluid{
+    max-width: 100%;
+}
+
+.row {
+    margin-top: 30px;
+}
+
+.img-rounded { 
+    border-radius: 50%; 
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    object-fit: cover;
+    margin-left: 10%;
+}
+
+.modal-content {
+    font-family: 'Kanit';
+}
+
+.col-lg-2 {
+    width: 200px;
+}
+
+span {
+    font-family: 'Kanit';
+}
+
+.profile {
+    margin-top: 1%;
+    width: 97%;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+    padding: 0.5em;
+}
+
+.profile-user {
+    margin-top: 4%;
+    width: 100%;
+    padding: 0.5em;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+}
+
+.profile-user1 {
+    margin-top: 4%;
+    padding: 0.5em;
+    width: 100%;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+    min-height: 250px;
+}
+
+.profile-user2 {
+    margin-top: 2%;
+    padding: 0.5em;
+    width: 95%;
+    height: auto;
+    background-color: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+    min-height: 490px;
+}
+
+.med-rounded{
+    width: 250px;
+    margin-left: 10%;
+}
+
+.actives {
+    color: rgb(48, 86, 189);
+    background-color: rgb(255, 255, 255);
+    width: 170px;
+    height: 50px;
+    border-end-end-radius: 35px;
+    border-top-right-radius: 35px;
+    position: relative;
+    right: 45px;
+    box-shadow: 5px 5px 10px rgb(173, 174, 179);
+    font-weight: bold;
+    clear: both;
+}
+
+.actives i {
+    margin-left: 45px;
+    margin-top: 17px;
+}
+
+li {
+    list-style: none;
+}
+
+.actives i:hover {
+    color: #000000;
+}
+
+i:hover {
+    color: rgb(48, 86, 189);
+}
+
+.btn {
+    box-shadow: 5px 5px 10px rgb(173, 174, 179);
+}
+
+.amount {
+    height: 100px;
+}
+
+.card {
+    margin-top: 10px;
+    transition: 0.3s;
+    border: 0;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 5px 5px 10px rgb(173, 174, 179);
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.content {
+    width: 100%;
+    min-height: 1050px;
+    padding: 5px;
+}
+
+.modal1 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+    font-family: 'Kanit';
+}
+
+.modal-content1 {
+    background-color: #fefefe;
+    margin: 5% auto 15% auto;
+    border: 1px solid #888;
+    width: 30%;
+    border-radius: 10px;
+}
+
+.close {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: red;
+    cursor: pointer;
+}
+
+.animate {
+    -webkit-animation: animatezoom 0.6s;
+    animation: animatezoom 0.6s;
+}
+
+.container {
+    padding: 16px;
+}
+
+a{
+    text-decoration: none;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.title {
+    text-align: center;
+    margin: 10px;
+    background-color: antiquewhite;
+}
+
+.calendar {
+    width: 100%;
+    margin: auto;
+    font-size: 13px;
+}
+
+.calendar td {
+    border: 2px solid #dedede;
+}
+
+.calendar th {
+    padding: 10px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.calendar td {
+    background-color: rgb(255, 255, 255);
+    width: 200px;
+    height: 150px;
+    padding: 25px 0px 0px 10px;
+}
+
+tr .month {
+    font-size: 25px;
+    color: rgb(0, 0, 0);
+    padding-right: 100px;
+}
+
+.date {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.appointment-name {
+    color: rgb(48, 86, 189);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.day-ul {
+    height: 100%;
+    padding: 0px 5px 0px 8px;
+}
+
+.day-ul:hover {
+    font-size: 15px;
+}
+
+.li-test{
+    list-style-type: circle;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        border: 0;
+    }
+    
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+    
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+    
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+            
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    table td:last-child {
+        border-bottom: 0;
+    }
+
+    .profile-user{
+        width: 98%;
+    }
+
+    .profile-user1{
+        width: 98%;
+    }
+
+    .profile-user2{
+        width: 98%;
+        margin-top: 5%;
+    }
+
+    .img-rounded{
+        margin-left: 20%;
+    }
+
+    .med-rounded{
+        width: 75%;
+    }
+}
