@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'crispy_forms',
+    'crispy_bootstrap4', 
     'rest_framework',
     'corsheaders',
     'bootstrap_datepicker_plus',
@@ -114,16 +115,33 @@ WSGI_APPLICATION = 'ClinicManagementSystem.wsgi.application'
 #     }
 # }
 
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ClinicManagement',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': 'OIyC*cD!QzRqfGyU',
-    } 
+        'NAME': 'mariadb', 
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
+    }
 }
+
+if DATABASE_URL:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(default=DATABASE_URL)
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'ClinicManagement',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'USER': 'root',
+#         'PASSWORD': 'N-U9CZQD_A3vbju2',
+#     } 
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
